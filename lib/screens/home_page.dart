@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Flexible(
                 child: ListView.builder(
-                    // physics: const NeverScrollableScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: offers?.length,
                     itemBuilder: (context, index) {
                       return Container(
