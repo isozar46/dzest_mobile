@@ -9,21 +9,21 @@ String offerToJson(List<Offer> data) =>
 class Offer {
   Offer({
     required this.id,
-    required this.owner,
+    required this.ownerName,
     required this.title,
-    this.description,
-    this.price,
+    required this.description,
+    required this.price,
   });
 
   int id;
-  int owner;
+  String ownerName;
   String title;
-  String? description;
-  int? price;
+  String description;
+  int price;
 
   factory Offer.fromJson(Map<String, dynamic> json) => Offer(
         id: json["id"],
-        owner: json["owner"],
+        ownerName: json["owner_name"],
         title: json["title"],
         description: json["description"],
         price: json["price"],
@@ -31,7 +31,7 @@ class Offer {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "owner": owner,
+        "owner_name": ownerName,
         "title": title,
         "description": description,
         "price": price,
