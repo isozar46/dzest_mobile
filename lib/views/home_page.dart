@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
+                Navigator.pushNamed(context, '/settings');
               },
             ),
           ],
@@ -71,8 +71,26 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         //title: Text(widget.title),
         //leading: null, // 1
-        title: Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
+        title:
+            Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
         centerTitle: true,
+        actions: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // <-- Radius
+                  ),
+                  elevation: 0,
+                ),
+                child: Text('Login')),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
@@ -135,7 +153,8 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return Container(
                           //padding: const EdgeInsets.all(16),
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 5),
                           height: 160,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -247,7 +266,8 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  Navigator.pushNamed(context, '/agencyprofile');
+                                                  Navigator.pushNamed(context,
+                                                      '/agencyprofile');
                                                 }),
                                         ],
                                       ),

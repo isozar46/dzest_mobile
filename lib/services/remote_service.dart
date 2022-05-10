@@ -1,10 +1,12 @@
 import 'package:dzest_mobile/models/offer.dart';
+import 'package:dzest_mobile/services/base_api.dart';
+
 import 'package:http/http.dart' as http;
 
-class RemoteService {
+class RemoteService extends BaseAPI {
   Future<List<Offer>?> getOffers(String query) async {
     var client = http.Client();
-    var uri = Uri.parse('http://192.168.1.10:8000/api/offers/?q=$query');
+    var uri = Uri.parse(offersPath + '?q=$query');
     var response = await client.get(uri);
     if (response.statusCode == 200) {
       var json = response.body;
