@@ -1,7 +1,7 @@
-import 'package:dzest_mobile/constants/app_colors.dart';
+import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dzest_mobile/models/User.dart';
-import 'package:dzest_mobile/services/auth_service.dart';
+import 'package:dzest_mobile/src/models/User.dart';
+import 'package:dzest_mobile/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
 
   savePref(key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("key", key);
+    await preferences.setString("key", key);
   }
 
   getData(username, password) async {
@@ -64,8 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.all(10),
                     child: const Text(
                       'Sign in',
-                      style:
-                          TextStyle(fontSize: 20, color: AppColors.textColor),
+                      style: TextStyle(fontSize: 20, color: AppColors.textColor),
                     )),
                 Container(
                   padding: const EdgeInsets.fromLTRB(38, 10, 38, 10),
@@ -145,9 +144,8 @@ class _LoginPageState extends State<LoginPage> {
                         elevation: 0,
                       ),
                       onPressed: () {
-                        getData(
-                            usernameController.text, passwordController.text);
-                        Navigator.pushReplacementNamed(context, "/home");
+                        getData(usernameController.text, passwordController.text);
+                        Navigator.pop(context);
                       },
                     )),
                 Row(

@@ -1,9 +1,10 @@
-import 'package:dzest_mobile/constants/app_colors.dart';
-import 'package:dzest_mobile/models/offer.dart';
+import 'package:dzest_mobile/src/constants/app_colors.dart';
+import 'package:dzest_mobile/src/models/offer_list.dart';
+import 'package:dzest_mobile/src/views/offer_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dzest_mobile/services/remote_service.dart';
+import 'package:dzest_mobile/src/services/remote_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -15,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Offer>? offers;
+  List<OfferList>? offers;
   final String _q = "";
   var isLoaded = false;
 
@@ -71,8 +72,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         //title: Text(widget.title),
         //leading: null, // 1
-        title:
-            Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
+        title: Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
         centerTitle: true,
         actions: [
           Container(
@@ -153,11 +153,10 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return Container(
                           //padding: const EdgeInsets.all(16),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 5),
+                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                           height: 160,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            //color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
@@ -168,134 +167,145 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          child: Row(children: [
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(10),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () {
+                                //Navigator.pushNamed(context, '/offer');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OfferPage(offerID: offers![index].id),
                                   ),
-                                  child: Image.network(
-                                    "https://images.adsttc.com/media/images/5ecd/d4ac/b357/65c6/7300/009d/slideshow/02C.jpg?1590547607",
-                                    fit: BoxFit.fill,
-                                    height: 160,
-                                    width: 160,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 160,
-                                  width: 160,
-                                  child: Align(
-                                    alignment: Alignment.topRight,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                        color: AppColors.primaryColor,
-                                      ),
-                                      child: Text(
-                                        offers![index].price.toString() + ' DA',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                );
+                              },
+                              child: Row(children: [
+                                Stack(
                                   children: [
-                                    Text(
-                                      offers![index].title,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.titleColor,
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                      ),
+                                      child: Image.network(
+                                        offers![index].images[0].imageUrl,
+                                        fit: BoxFit.fill,
+                                        height: 160,
+                                        width: 160,
                                       ),
                                     ),
-                                    Text(
-                                      'location',
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.textColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      offers![index].description,
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.textColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      'on date ',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: AppColors.textColor,
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: <TextSpan>[
-                                          const TextSpan(
-                                            text: 'published by ',
+                                    SizedBox(
+                                      height: 160,
+                                      width: 160,
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                            ),
+                                            color: AppColors.primaryColor,
+                                          ),
+                                          child: Text(
+                                            offers![index].price.toString() + ' DA',
                                             style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.textColor,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
                                             ),
                                           ),
-                                          TextSpan(
-                                              text: offers![index].ownerName,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                              recognizer: TapGestureRecognizer()
-                                                ..onTap = () {
-                                                  Navigator.pushNamed(context,
-                                                      '/agencyprofile');
-                                                }),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                    /*Row(
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'published by ',
+                                          offers![index].title,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.titleColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          'location',
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: AppColors.textColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          offers![index].description,
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: AppColors.textColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          'on date ',
                                           style: const TextStyle(
                                             fontSize: 12,
                                             color: AppColors.textColor,
                                           ),
                                         ),
-                                        Text(
-                                          offers![index].ownerName,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.primaryColor,
+                                        Text.rich(
+                                          TextSpan(
+                                            children: <TextSpan>[
+                                              const TextSpan(
+                                                text: 'published by ',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors.textColor,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: offers![index].ownerName,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.primaryColor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
+                                        /*Row(
+                                          children: [
+                                            Text(
+                                              'published by ',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: AppColors.textColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              offers![index].ownerName,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.primaryColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),*/
                                       ],
-                                    ),*/
-                                  ],
-                                ),
-                              ),
-                            )
-                          ]));
+                                    ),
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ));
                     }),
                 replacement: const Center(
                   child: CircularProgressIndicator(),
