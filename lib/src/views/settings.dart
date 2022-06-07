@@ -21,9 +21,10 @@ class _SettingsState extends State<Settings> {
   }
 
   void deleteToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     //setState(() {
-    prefs.remove('key');
+    preferences.remove('key');
+    preferences.setBool("seen", false);
     //});
   }
 

@@ -19,7 +19,8 @@ class _LoginPageState extends State<LoginPage> {
 
   savePref(key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setString("key", key);
+    preferences.setString("key", key);
+    preferences.setBool("seen", true);
   }
 
   getData(username, password) async {
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: usernameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'User Name',
+                      labelText: 'Email',
                       floatingLabelStyle: TextStyle(
                         color: AppColors.primaryColor,
                       ),
@@ -160,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () {
-                        //signup screen
+                        Navigator.pushNamed(context, '/register');
                       },
                     )
                   ],

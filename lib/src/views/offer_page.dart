@@ -5,6 +5,7 @@ import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/models/offer.dart';
 import 'package:dzest_mobile/src/services/remote_service.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class OfferPage extends StatefulWidget {
   const OfferPage({
@@ -21,16 +22,11 @@ class _OfferPageState extends State<OfferPage> {
   Offer? offer;
   int _current = 0;
   var isLoaded = false;
-  // offers![index].images[0].imageUrl,
   final CarouselController _controller = CarouselController();
   List<String> images = [];
-  /*final List<String> images = [
-    "https://images.adsttc.com/media/images/5ecd/d4ac/b357/65c6/7300/009d/slideshow/02C.jpg?1590547607",
-    "https://images.adsttc.com/media/images/5ecd/d4ac/b357/65c6/7300/009d/slideshow/02C.jpg?1590547607",
-    "https://images.adsttc.com/media/images/5ecd/d4ac/b357/65c6/7300/009d/slideshow/02C.jpg?1590547607",
-    "https://images.adsttc.com/media/images/5ecd/d4ac/b357/65c6/7300/009d/slideshow/02C.jpg?1590547607",
-    "https://images.adsttc.com/media/images/5ecd/d4ac/b357/65c6/7300/009d/slideshow/02C.jpg?1590547607"
-  ];*/
+
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
@@ -211,6 +207,48 @@ class _OfferPageState extends State<OfferPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Agence :',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textColor,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          offer?.ownerName.toString() ?? 'no agency',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      //offset: Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Text(
                       'Property info :',
                       style: TextStyle(
@@ -228,24 +266,10 @@ class _OfferPageState extends State<OfferPage> {
                         ),
                         SizedBox(width: 10),
                         IconText(
-                          icon: Icons.water_drop_outlined,
-                          text: 'Water',
+                          icon: Icons.local_offer_outlined,
+                          text: 'Offer Type : Apartement',
                         ),
                         SizedBox(width: 10),
-                        IconText(
-                          icon: Icons.fiber_manual_record_outlined,
-                          text: 'Gas',
-                        ),
-                        SizedBox(width: 10),
-                        IconText(
-                          icon: Icons.flash_on_rounded,
-                          text: 'Electrisity',
-                        ),
-                        SizedBox(width: 10),
-                        IconText(
-                          icon: Icons.signal_cellular_alt_rounded,
-                          text: ' internet',
-                        ),
                       ],
                     ),
                   ],
@@ -288,52 +312,115 @@ class _OfferPageState extends State<OfferPage> {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      //offset: Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Comments :',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textColor,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    ListView.builder(
-                      //physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: offer?.comments.length,
-                      itemBuilder: (context, index) {
-                        return CommentBox(
-                          comment: offer!.comments[index],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
           replacement: const Center(
             child: CircularProgressIndicator(),
           ),
         ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.red,
+            child: const Icon(
+              Icons.phone,
+              size: 30,
+            ),
+            onPressed: () {},
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            backgroundColor: AppColors.primaryColor,
+            child: const Icon(
+              Icons.comment,
+              size: 30,
+            ),
+            onPressed: () {
+              showBarModalBottomSheet(
+                enableDrag: true,
+                backgroundColor: Colors.transparent,
+                expand: false,
+                context: context,
+                builder: (context) => FractionallySizedBox(
+                  heightFactor: 0.8,
+                  child: ListView(
+                    padding: const EdgeInsets.all(20),
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Comments :',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textColor,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Form(
+                        key: _formKey,
+                        child: Container(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: TextFormField(
+                            controller: commentController,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Add Coment',
+                              floatingLabelStyle: TextStyle(
+                                color: AppColors.primaryColor,
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.primaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
+                            ),
+                            cursorColor: AppColors.primaryColor,
+                            style: const TextStyle(color: AppColors.textColor),
+
+                            // The validator receives the text that the user has entered.
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'this field cant be empty';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: offer?.comments.length,
+                        itemBuilder: (context, index) {
+                          return CommentBox(
+                            comment: offer!.comments[index],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

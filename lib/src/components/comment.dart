@@ -14,33 +14,52 @@ class CommentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       children: [
         Container(
           margin: EdgeInsets.fromLTRB(left_margin + comment.depth * 20, 5.0, 5.0, 5.0),
-          padding: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 216, 214, 255),
-            borderRadius: BorderRadius.circular(10),
-            /*boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 3,
-                              //offset: Offset(0, 1), // changes position of shadow
-                            ),
-                            ],*/
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(comment.user),
-              Text(comment.text),
+              const CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://img.freepik.com/vecteurs-libre/homme-affaires-caractere-avatar-isole_24877-60111.jpg?w=2000'),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 216, 214, 255),
+                    borderRadius: BorderRadius.circular(10),
+                    /*boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      //offset: Offset(0, 1), // changes position of shadow
+                                    ),
+                                    ],*/
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        comment.user,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(comment.text),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
         ListView.builder(
-          //physics: const BouncingScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: comment.replies.length,
           itemBuilder: (context, index) {

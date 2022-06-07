@@ -1,11 +1,14 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
+import 'package:dzest_mobile/src/views/agency/add_offer.dart';
 import 'package:dzest_mobile/src/views/agency_profile.dart';
+import 'package:dzest_mobile/src/views/auth/agency_signup.dart';
+import 'package:dzest_mobile/src/views/auth/client_signup.dart';
 import 'package:dzest_mobile/src/views/auth/login_page.dart';
-import 'package:dzest_mobile/src/views/offer_page.dart';
+import 'package:dzest_mobile/src/views/client/favourites.dart';
+import 'package:dzest_mobile/src/views/register.dart';
 import 'package:dzest_mobile/src/views/settings.dart';
+import 'package:dzest_mobile/src/views/welcome.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dzest_mobile/src/views/home_page.dart';
 
 void main() async {
   runApp(const App());
@@ -30,12 +33,17 @@ class App extends StatelessWidget {
               fontFamily: 'Nunito',
             ),
           )),
-      home: const HomePage(title: 'Dzest'),
+      home: WelcomeScreen(),
       routes: {
         '/agencyprofile': (context) => AgencyProfile(),
         //'/offer': (context) => OfferPage(),
         '/login': (context) => LoginPage(),
         '/settings': (context) => Settings(),
+        '/addoffer': (context) => AddOffer(),
+        '/register': (context) => RegisterChoice(),
+        '/clientsignup': (context) => ClientSignUp(),
+        '/agencysignup': (context) => AgencySignUp(),
+        '/favourites': (context) => Favourites(),
       },
     );
   }

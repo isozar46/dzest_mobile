@@ -1,9 +1,8 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/models/offer_list.dart';
 import 'package:dzest_mobile/src/views/offer_page.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 import 'package:dzest_mobile/src/services/remote_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,15 +15,60 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<OfferList>? offers;
+  OfferList? offers;
   final String _q = "";
   var isLoaded = false;
+
+  /* ************** pagination-load-more ************** */
+
+  int page = 1;
+
+  // There is next page or not
+  bool hasNextPage = true;
+
+  // Used to display loading indicators when _loadMore function is running
+  bool isLoadMoreRunning = false;
+
+  void loadMore() async {
+    if (hasNextPage == true &&
+        isLoadMoreRunning == false &&
+        scrollController.position.extentAfter < 300) {
+      setState(() {
+        isLoadMoreRunning = true; // Display a progress indicator at the bottom
+      });
+      page += 1;
+
+      if (offers?.next != null) {
+        OfferList? moreOffers = await RemoteService().getOffers(page);
+        setState(() {
+          offers?.results.addAll(moreOffers!.results);
+        });
+      } else {
+        setState(() {
+          hasNextPage = false;
+        });
+      }
+
+      setState(() {
+        isLoadMoreRunning = false; // Display a progress indicator at the bottom
+      });
+    }
+  }
+
+  late ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
 
-    getData(_q);
+    getData(page);
+    scrollController = ScrollController()..addListener(loadMore);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(loadMore);
+    super.dispose();
   }
 
   getData(value) async {
@@ -39,59 +83,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-              ),
-              child: Text('Drawer Header'),
-            ),
-            ListTile(
-              title: const Text('Add Offer'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        //title: Text(widget.title),
-        //leading: null, // 1
-        title: Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
-        centerTitle: true,
-        actions: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // <-- Radius
-                  ),
-                  elevation: 0,
-                ),
-                child: Text('Login')),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -116,6 +107,65 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            /*Container(
+                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColors.primaryColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                            ),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'For Rent',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 1,
+                    ),
+                    Container(
+                      width: 120,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColors.primaryColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'For Sale',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),*/
             Container(
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
               child: Row(
@@ -131,7 +181,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      getData(_q);
+                      page = 1;
+                      hasNextPage = true;
+                      isLoadMoreRunning = false;
+                      getData(page);
+                      scrollController.animateTo(0,
+                          duration: const Duration(milliseconds: 100), curve: Curves.linear);
                     },
                     child: const Text(
                       'Refresh',
@@ -149,7 +204,8 @@ class _HomePageState extends State<HomePage> {
                 visible: isLoaded,
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
-                    itemCount: offers?.length,
+                    controller: scrollController,
+                    itemCount: offers?.results.length,
                     itemBuilder: (context, index) {
                       return Container(
                           //padding: const EdgeInsets.all(16),
@@ -176,7 +232,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => OfferPage(offerID: offers![index].id),
+                                    builder: (context) =>
+                                        OfferPage(offerID: offers!.results[index].id),
                                   ),
                                 );
                               },
@@ -189,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                                         bottomLeft: Radius.circular(10),
                                       ),
                                       child: Image.network(
-                                        offers![index].images[0].imageUrl,
+                                        offers!.results[index].images[0].imageUrl,
                                         fit: BoxFit.fill,
                                         height: 160,
                                         width: 160,
@@ -209,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                                             color: AppColors.primaryColor,
                                           ),
                                           child: Text(
-                                            offers![index].price.toString() + ' DA',
+                                            offers!.results[index].price.toString() + ' DA',
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
@@ -228,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          offers![index].title,
+                                          offers!.results[index].title,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
@@ -238,14 +295,14 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                         Text(
-                                          'location',
+                                          'à ' + offers!.results[index].state,
                                           style: const TextStyle(
                                             fontSize: 10,
-                                            color: AppColors.textColor,
+                                            color: AppColors.primaryColor,
                                           ),
                                         ),
                                         Text(
-                                          offers![index].description,
+                                          offers!.results[index].description,
                                           maxLines: 2,
                                           style: const TextStyle(
                                             fontSize: 10,
@@ -253,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                         Text(
-                                          'on date ',
+                                          offers!.results[index].created,
                                           style: const TextStyle(
                                             fontSize: 12,
                                             color: AppColors.textColor,
@@ -270,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: offers![index].ownerName,
+                                                text: offers!.results[index].ownerName,
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.bold,
@@ -290,7 +347,7 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             Text(
-                                              offers![index].ownerName,
+                                              offers!.results[index].ownerName,
                                               style: const TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
@@ -318,43 +375,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-/*
-
-Row(
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    offers![index].title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    offers![index].description ?? '',
-                                    maxLines: 3,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-
-*/

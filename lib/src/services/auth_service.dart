@@ -21,7 +21,7 @@ class AuthService extends BaseAPI {
     return null;
   }
 
-  /*Future<User?>*/ void logout(token) async {
+  void logout(token) async {
     final headers = {
       ...super.headers,
       HttpHeaders.authorizationHeader: "Token $token",
@@ -30,11 +30,5 @@ class AuthService extends BaseAPI {
       Uri.parse(super.authPath + '/logout/'),
       headers: headers,
     );
-    /*
-    if (response.statusCode == 200) {
-      var json = response.body;
-      return userFromJson(json);
-    }
-    return null;*/
   }
 }
