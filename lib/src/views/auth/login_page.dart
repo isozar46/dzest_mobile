@@ -1,6 +1,6 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
+import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dzest_mobile/src/models/User.dart';
 import 'package:dzest_mobile/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -15,20 +15,15 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var isLoaded = true;
-  User? user;
-
-  savePref(key) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("key", key);
-    preferences.setBool("seen", true);
-  }
 
   getData(username, password) async {
-    user = await AuthService().login(username, password);
-    if (user != null) {
+    String? key = await AuthService().login(username, password);
+    if (key != null) {
       setState(() {
+        setToken(key);
+        setSeen();
+        print(key);
         isLoaded = false;
-        savePref(user?.key);
       });
     }
   }

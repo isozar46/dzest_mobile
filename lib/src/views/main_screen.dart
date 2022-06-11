@@ -1,7 +1,11 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:dzest_mobile/src/models/User.dart';
+import 'package:dzest_mobile/src/services/auth_service.dart';
+import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
 import 'package:dzest_mobile/src/views/client/favourites.dart';
 import 'package:dzest_mobile/src/views/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/app_colors.dart';
 
@@ -15,6 +19,62 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   var isAgency = false;
+
+  String token = "";
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = getToken() as String;
+    });
+  }
+
+  User? user;
+
+  savePref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (user!.isClient == true) {
+      preferences.setBool("is_client", true);
+    }
+    if (user!.isAgency == true) {
+      setAgency();
+      isAgency = true;
+    }
+    if (user!.clientId != null) {
+      preferences.setInt("is_agency", user!.clientId);
+    }
+    if (user!.agencyId != null) {
+      preferences.setInt("is_agency", user!.agencyId);
+    }
+    preferences.setInt("user_id", user!.id);
+  }
+
+  void deleteToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    //setState(() {
+    preferences.remove('key');
+    preferences.remove('is_agency');
+    preferences.remove('is_client');
+    preferences.setBool("seen", false);
+    //});
+  }
+
+  getData(token) async {
+    user = await AuthService().user_details();
+    savePref();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+    getData(token);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   List<Widget> _widgetOptions = <Widget>[
     HomePage(

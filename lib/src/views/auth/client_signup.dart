@@ -1,4 +1,6 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
+import 'package:dzest_mobile/src/services/auth_service.dart';
+import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
 import 'package:flutter/material.dart';
 
 class ClientSignUp extends StatefulWidget {
@@ -15,6 +17,13 @@ class _ClientSignUpState extends State<ClientSignUp> {
   TextEditingController emailController = TextEditingController();
   TextEditingController password1Controller = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
+
+  getData(username, email, password1, password2) async {
+    String? key = await AuthService().register_client(username, email, password1, password2);
+    setToken(key!);
+    setSeen();
+    setClient();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +196,10 @@ class _ClientSignUpState extends State<ClientSignUp> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Processing Data')),
                     );
+
+                    getData(usernameController.text, emailController.text, password1Controller.text,
+                        password2Controller.text);
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text(

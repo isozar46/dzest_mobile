@@ -6,6 +6,8 @@ import 'package:dzest_mobile/src/models/offer.dart';
 import 'package:dzest_mobile/src/services/remote_service.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OfferPage extends StatefulWidget {
   const OfferPage({
@@ -323,12 +325,29 @@ class _OfferPageState extends State<OfferPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.blue,
+            child: const Icon(
+              Icons.email,
+              size: 30,
+            ),
+            onPressed: () {
+              launch(
+                  'mailto:rajatrrpalankar@gmail.com?subject=This is Subject Title&body=This is Body of Email');
+            },
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            backgroundColor: Colors.green,
             child: const Icon(
               Icons.phone,
               size: 30,
             ),
-            onPressed: () {},
+            onPressed: () {
+              launch('tel:+91 88888888888');
+              // launch('mailto:rajatrrpalankar@gmail.com?subject=This is Subject Title&body=This is Body of Email');
+            },
           ),
           SizedBox(
             height: 10,

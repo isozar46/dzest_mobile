@@ -1,9 +1,11 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/models/offer_list.dart';
+import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
 import 'package:dzest_mobile/src/views/offer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dzest_mobile/src/services/remote_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -57,10 +59,15 @@ class _HomePageState extends State<HomePage> {
 
   late ScrollController scrollController;
 
+  bool is_agency = false;
+
+  loadPref() async {
+    is_agency = (await getAgency())!;
+  }
+
   @override
   void initState() {
     super.initState();
-
     getData(page);
     scrollController = ScrollController()..addListener(loadMore);
   }
@@ -76,6 +83,7 @@ class _HomePageState extends State<HomePage> {
     if (offers != null) {
       setState(() {
         isLoaded = true;
+        loadPref();
       });
     }
   }
@@ -372,6 +380,18 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      floatingActionButton: is_agency
+          ? FloatingActionButton(
+              backgroundColor: AppColors.primaryColor,
+              child: const Icon(
+                Icons.add,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/addoffer');
+              },
+            )
+          : null,
     );
   }
 }

@@ -1,4 +1,5 @@
 //import 'package:dzest_mobile/services/sharedpref_manager.dart';
+import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dzest_mobile/src/services/auth_service.dart';
@@ -14,16 +15,15 @@ class _SettingsState extends State<Settings> {
   late String token;
 
   void loadToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      token = prefs.getString('key') ?? '0';
-    });
+    String? token = await getToken();
   }
 
   void deleteToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     //setState(() {
     preferences.remove('key');
+    preferences.remove('is_agency');
+    preferences.remove('is_client');
     preferences.setBool("seen", false);
     //});
   }
@@ -31,6 +31,7 @@ class _SettingsState extends State<Settings> {
   @override
   void initState() {
     super.initState();
+
     loadToken();
   }
 
