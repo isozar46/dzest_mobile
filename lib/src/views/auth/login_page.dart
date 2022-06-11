@@ -1,4 +1,5 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
+import 'package:dzest_mobile/src/models/User.dart';
 import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dzest_mobile/src/services/auth_service.dart';
@@ -15,14 +16,37 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   var isLoaded = true;
+  User? user;
 
-  getData(username, password) async {
+  savePref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (user!.isClient == true) {
+      setClient();
+    }
+    if (user!.isAgency == true) {
+      setAgency();
+    }
+    if (user!.clientId != null) {
+      preferences.setInt("client_id", user!.clientId);
+    }
+    if (user!.agencyId != null) {
+      preferences.setInt("agency_id", user!.agencyId);
+    }
+    preferences.setInt("user_id", user!.id);
+  }
+
+  getData() async {
+    user = await AuthService().user_details();
+    savePref();
+  }
+
+  sendData(username, password) async {
     String? key = await AuthService().login(username, password);
     if (key != null) {
       setState(() {
         setToken(key);
         setSeen();
-        print(key);
+        getData();
         isLoaded = false;
       });
     }
@@ -140,7 +164,8 @@ class _LoginPageState extends State<LoginPage> {
                         elevation: 0,
                       ),
                       onPressed: () {
-                        getData(usernameController.text, passwordController.text);
+                        sendData(usernameController.text, passwordController.text);
+
                         Navigator.pop(context);
                       },
                     )),

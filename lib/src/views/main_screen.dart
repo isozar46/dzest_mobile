@@ -18,23 +18,21 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  var isAgency = false;
+  bool isAgency = false;
+  bool _seen = false;
 
-  String token = "";
-
-  void loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      token = getToken() as String;
-    });
+  check() async {
+    isAgency = (await getAgency())!;
+    _seen = (await getSeen())!;
   }
 
+  /*
   User? user;
 
   savePref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (user!.isClient == true) {
-      preferences.setBool("is_client", true);
+      setClient();
     }
     if (user!.isAgency == true) {
       setAgency();
@@ -47,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
       preferences.setInt("is_agency", user!.agencyId);
     }
     preferences.setInt("user_id", user!.id);
-  }
+  }*/
 
   void deleteToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -55,20 +53,23 @@ class _MainScreenState extends State<MainScreen> {
     preferences.remove('key');
     preferences.remove('is_agency');
     preferences.remove('is_client');
+    preferences.remove('client_id');
+    preferences.remove('agency_id');
     preferences.setBool("seen", false);
     //});
   }
 
-  getData(token) async {
+  /*
+  getData() async {
     user = await AuthService().user_details();
     savePref();
-  }
+  }*/
 
   @override
   void initState() {
     super.initState();
-    loadData();
-    getData(token);
+    check();
+    //getData();
   }
 
   @override
@@ -122,21 +123,39 @@ class _MainScreenState extends State<MainScreen> {
         title: Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
         centerTitle: true,
         actions: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // <-- Radius
-                  ),
-                  elevation: 0,
+          !_seen
+              ? Container(
+                  margin: const EdgeInsets.all(10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        AuthService().logout();
+                        deleteToken();
+                        Navigator.pushNamed(context, '/welcome');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // <-- Radius
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text('Log out')),
+                )
+              : Container(
+                  margin: const EdgeInsets.all(10),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // <-- Radius
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text('Login')),
                 ),
-                child: Text('Login')),
-          ),
         ],
       ),
       bottomNavigationBar: ConvexAppBar(

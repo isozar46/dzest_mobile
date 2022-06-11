@@ -15,6 +15,11 @@ Future<bool> setSeen() async {
   return prefs.setBool("seen", true);
 }
 
+Future<bool?> getSeen() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool("seen");
+}
+
 Future<bool> setAgency() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.setBool("is_agency", true);

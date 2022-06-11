@@ -44,6 +44,7 @@ class App extends StatelessWidget {
         '/clientsignup': (context) => ClientSignUp(),
         '/agencysignup': (context) => AgencySignUp(),
         '/favourites': (context) => Favourites(),
+        '/welcome': (context) => WelcomeScreen(),
       },
     );
   }

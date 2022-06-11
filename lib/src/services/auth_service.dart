@@ -42,7 +42,9 @@ class AuthService extends BaseAPI {
     return null;
   }
 
-  void logout(token) async {
+  void logout() async {
+    String? token = await getToken();
+
     final headers = {
       ...super.headers,
       HttpHeaders.authorizationHeader: "Token $token",

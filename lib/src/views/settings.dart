@@ -50,7 +50,7 @@ class _SettingsState extends State<Settings> {
               Expanded(child: Text(token)),
               ElevatedButton(
                 onPressed: () {
-                  AuthService().logout(token);
+                  AuthService().logout();
                   deleteToken();
                 },
                 child: const Text('Logout'),
