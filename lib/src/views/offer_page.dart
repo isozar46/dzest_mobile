@@ -79,7 +79,8 @@ class _OfferPageState extends State<OfferPage> {
                       return Container(
                         width: MediaQuery.of(context).size.width,
                         height: 400,
-                        margin: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 5.0),
+                        margin:
+                            const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 5.0),
                         //padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -113,10 +114,12 @@ class _OfferPageState extends State<OfferPage> {
                     child: Container(
                       width: 12.0,
                       height: 12.0,
-                      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+                      margin:
+                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: (Theme.of(context).brightness == Brightness.dark
+                          color: (Theme.of(context).brightness ==
+                                      Brightness.dark
                                   ? Colors.white
                                   : AppColors.primaryColor)
                               .withOpacity(_current == entry.key ? 0.9 : 0.4)),
@@ -162,7 +165,8 @@ class _OfferPageState extends State<OfferPage> {
                               children: [
                                 IconText(
                                   icon: Icons.access_time,
-                                  text: ' ' + (offer?.created.toString() ?? 'no date'),
+                                  text: ' ' +
+                                      (offer?.created.toString() ?? 'no date'),
                                 ),
                                 SizedBox(width: 10),
                                 IconText(
@@ -192,7 +196,8 @@ class _OfferPageState extends State<OfferPage> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -234,7 +239,8 @@ class _OfferPageState extends State<OfferPage> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -278,7 +284,8 @@ class _OfferPageState extends State<OfferPage> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -325,6 +332,7 @@ class _OfferPageState extends State<OfferPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: "email",
             backgroundColor: Colors.blue,
             child: const Icon(
               Icons.email,
@@ -339,6 +347,7 @@ class _OfferPageState extends State<OfferPage> {
             height: 10,
           ),
           FloatingActionButton(
+            heroTag: "phone",
             backgroundColor: Colors.green,
             child: const Icon(
               Icons.phone,
@@ -353,6 +362,7 @@ class _OfferPageState extends State<OfferPage> {
             height: 10,
           ),
           FloatingActionButton(
+            heroTag: "comment",
             backgroundColor: AppColors.primaryColor,
             child: const Icon(
               Icons.comment,
@@ -399,7 +409,7 @@ class _OfferPageState extends State<OfferPage> {
                             controller: commentController,
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
-                              labelText: 'Add Coment',
+                              labelText: 'Add Comment',
                               floatingLabelStyle: TextStyle(
                                 color: AppColors.primaryColor,
                               ),

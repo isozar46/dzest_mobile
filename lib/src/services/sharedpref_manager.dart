@@ -34,3 +34,23 @@ Future<bool> setClient() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.setBool("is_client", true);
 }
+
+Future<bool?> getClient() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool("is_client");
+}
+
+Future<bool> setClientId(id) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setInt("client_id", id);
+}
+
+Future<bool> setAgencyId(id) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setInt("agency_id", id);
+}
+
+Future<bool> setId(id) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setInt("user_id", id);
+}

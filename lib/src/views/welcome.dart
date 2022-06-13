@@ -1,4 +1,7 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
+import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
+import 'package:dzest_mobile/src/views/agency_main_screen.dart';
+import 'package:dzest_mobile/src/views/client_main_screen.dart';
 import 'package:dzest_mobile/src/views/home_page.dart';
 import 'package:dzest_mobile/src/views/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +17,22 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   Future checkFirstSeen() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    bool _seen = (preferences.getBool('seen') ?? false);
+    bool _seen = (await getSeen())!;
+    bool isAgency = (await getAgency())!;
+    bool isClient = (await getClient())!;
 
     if (_seen) {
-      Navigator.of(context)
-          .pushReplacement(new MaterialPageRoute(builder: (context) => new MainScreen()));
+      if (isAgency) {
+        Navigator.of(context).pushReplacement(new MaterialPageRoute(
+            builder: (context) => new AgencyMainScreen()));
+      }
+      if (isClient) {
+        Navigator.of(context).pushReplacement(new MaterialPageRoute(
+            builder: (context) => new ClientMainScreen()));
+      } else {
+        Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(builder: (context) => new MainScreen()));
+      }
     }
   }
 
@@ -46,8 +60,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                      new MaterialPageRoute(builder: (context) => new MainScreen()));
+                  Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                      builder: (context) => new MainScreen()));
                 },
                 icon: const Icon(Icons.arrow_forward_ios_rounded),
               )
@@ -88,7 +102,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           style: ElevatedButton.styleFrom(
                             primary: AppColors.primaryColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // <-- Radius
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
                             ),
                             elevation: 0,
                           ),
@@ -111,10 +126,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            side: const BorderSide(width: 3, color: AppColors.primaryColor),
+                            side: const BorderSide(
+                                width: 3, color: AppColors.primaryColor),
                             primary: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // <-- Radius
+                              borderRadius:
+                                  BorderRadius.circular(10), // <-- Radius
                             ),
                             elevation: 0,
                           ),

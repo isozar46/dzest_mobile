@@ -5,6 +5,7 @@ class BaseAPI {
   var offerPath = api + "/offer";
   var authPath = api + "/auth";
   var addOffer = api + "/add_offer";
+  var removeOffer = api + "/delete_offer";
   // more routes
   Map<String, String> headers = {"Content-Type": "application/json; charset=UTF-8"};
 }

@@ -1,6 +1,7 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/services/auth_service.dart';
 import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
+import 'package:dzest_mobile/src/views/client_main_screen.dart';
 import 'package:flutter/material.dart';
 
 class ClientSignUp extends StatefulWidget {
@@ -19,7 +20,8 @@ class _ClientSignUpState extends State<ClientSignUp> {
   TextEditingController password2Controller = TextEditingController();
 
   getData(username, email, password1, password2) async {
-    String? key = await AuthService().register_client(username, email, password1, password2);
+    String? key = await AuthService()
+        .register_client(username, email, password1, password2);
     setToken(key!);
     setSeen();
     setClient();
@@ -197,9 +199,14 @@ class _ClientSignUpState extends State<ClientSignUp> {
                       const SnackBar(content: Text('Processing Data')),
                     );
 
-                    getData(usernameController.text, emailController.text, password1Controller.text,
-                        password2Controller.text);
-                    Navigator.pop(context);
+                    getData(usernameController.text, emailController.text,
+                        password1Controller.text, password2Controller.text);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ClientMainScreen()),
+                      (Route<dynamic> route) => false,
+                    );
                   }
                 },
                 child: const Text(

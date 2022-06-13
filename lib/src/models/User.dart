@@ -16,7 +16,7 @@ class User {
   });
 
   int id;
-  int agencyId;
+  dynamic agencyId;
   dynamic clientId;
   String username;
   String email;

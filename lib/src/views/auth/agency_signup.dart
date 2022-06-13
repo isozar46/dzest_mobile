@@ -2,6 +2,7 @@ import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/models/User.dart';
 import 'package:dzest_mobile/src/services/auth_service.dart';
 import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
+import 'package:dzest_mobile/src/views/agency_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +23,8 @@ class _AgencySignUpState extends State<AgencySignUp> {
   TextEditingController password2Controller = TextEditingController();
 
   getData(username, email, password1, password2, name) async {
-    String? key = await AuthService().register_agency(username, email, password1, password2, name);
+    String? key = await AuthService()
+        .register_agency(username, email, password1, password2, name);
     setToken(key!);
     setSeen();
     setAgency();
@@ -228,8 +230,19 @@ class _AgencySignUpState extends State<AgencySignUp> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Processing Data')),
                     );
-                    getData(usernameController.text, emailController.text, password1Controller.text,
-                        password2Controller.text, nameController.text);
+                    getData(
+                        usernameController.text,
+                        emailController.text,
+                        password1Controller.text,
+                        password2Controller.text,
+                        nameController.text);
+                    //Navigator.pushReplacementNamed(context, '/agencyscreen');
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AgencyMainScreen()),
+                      (Route<dynamic> route) => false,
+                    );
                   }
                 },
                 child: const Text(

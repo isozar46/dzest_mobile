@@ -69,12 +69,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getData(page);
-    scrollController = ScrollController()..addListener(loadMore);
   }
 
   @override
   void dispose() {
-    scrollController.removeListener(loadMore);
     super.dispose();
   }
 
@@ -194,7 +192,8 @@ class _HomePageState extends State<HomePage> {
                       isLoadMoreRunning = false;
                       getData(page);
                       scrollController.animateTo(0,
-                          duration: const Duration(milliseconds: 100), curve: Curves.linear);
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.linear);
                     },
                     child: const Text(
                       'Refresh',
@@ -212,12 +211,12 @@ class _HomePageState extends State<HomePage> {
                 visible: isLoaded,
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
-                    controller: scrollController,
                     itemCount: offers?.results.length,
                     itemBuilder: (context, index) {
                       return Container(
                           //padding: const EdgeInsets.all(16),
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 5),
                           height: 160,
                           decoration: BoxDecoration(
                             //color: Colors.white,
@@ -240,8 +239,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        OfferPage(offerID: offers!.results[index].id),
+                                    builder: (context) => OfferPage(
+                                        offerID: offers!.results[index].id),
                                   ),
                                 );
                               },
@@ -254,7 +253,8 @@ class _HomePageState extends State<HomePage> {
                                         bottomLeft: Radius.circular(10),
                                       ),
                                       child: Image.network(
-                                        offers!.results[index].images[0].imageUrl,
+                                        offers!
+                                            .results[index].images[0].imageUrl,
                                         fit: BoxFit.fill,
                                         height: 160,
                                         width: 160,
@@ -268,13 +268,16 @@ class _HomePageState extends State<HomePage> {
                                         child: Container(
                                           padding: const EdgeInsets.all(5),
                                           decoration: BoxDecoration(
-                                            borderRadius: const BorderRadius.only(
+                                            borderRadius:
+                                                const BorderRadius.only(
                                               bottomLeft: Radius.circular(10),
                                             ),
                                             color: AppColors.primaryColor,
                                           ),
                                           child: Text(
-                                            offers!.results[index].price.toString() + ' DA',
+                                            offers!.results[index].price
+                                                    .toString() +
+                                                ' DA',
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
@@ -290,7 +293,8 @@ class _HomePageState extends State<HomePage> {
                                   child: Container(
                                     padding: const EdgeInsets.all(5),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           offers!.results[index].title,
@@ -335,7 +339,8 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: offers!.results[index].ownerName,
+                                                text: offers!
+                                                    .results[index].ownerName,
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.bold,
@@ -380,18 +385,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: is_agency
-          ? FloatingActionButton(
-              backgroundColor: AppColors.primaryColor,
-              child: const Icon(
-                Icons.add,
-                size: 30,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/addoffer');
-              },
-            )
-          : null,
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/models/User.dart';
 import 'package:dzest_mobile/src/services/sharedpref_manager.dart';
+import 'package:dzest_mobile/src/views/agency_main_screen.dart';
+import 'package:dzest_mobile/src/views/client_main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dzest_mobile/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   User? user;
 
   savePref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
     if (user!.isClient == true) {
       setClient();
     }
@@ -27,12 +28,29 @@ class _LoginPageState extends State<LoginPage> {
       setAgency();
     }
     if (user!.clientId != null) {
-      preferences.setInt("client_id", user!.clientId);
+      setClientId(user!.clientId);
     }
     if (user!.agencyId != null) {
-      preferences.setInt("agency_id", user!.agencyId);
+      setClientId(user!.agencyId);
     }
-    preferences.setInt("user_id", user!.id);
+    setId(user!.id);
+
+    if (user!.isAgency == true) {
+      //Navigator.pushReplacementNamed(context, '/agencyscreen');
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => AgencyMainScreen()),
+        (Route<dynamic> route) => false,
+      );
+    }
+    if (user!.isClient == true) {
+      //Navigator.pushReplacementNamed(context, '/clientscreen');
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ClientMainScreen()),
+        (Route<dynamic> route) => false,
+      );
+    }
   }
 
   getData() async {
@@ -84,7 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.all(10),
                     child: const Text(
                       'Sign in',
-                      style: TextStyle(fontSize: 20, color: AppColors.textColor),
+                      style:
+                          TextStyle(fontSize: 20, color: AppColors.textColor),
                     )),
                 Container(
                   padding: const EdgeInsets.fromLTRB(38, 10, 38, 10),
@@ -164,9 +183,8 @@ class _LoginPageState extends State<LoginPage> {
                         elevation: 0,
                       ),
                       onPressed: () {
-                        sendData(usernameController.text, passwordController.text);
-
-                        Navigator.pop(context);
+                        sendData(
+                            usernameController.text, passwordController.text);
                       },
                     )),
                 Row(

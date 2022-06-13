@@ -7,66 +7,42 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-class AddOffer extends StatefulWidget {
-  const AddOffer({Key? key}) : super(key: key);
-
+class EditOffer extends StatefulWidget {
+  const EditOffer({
+    Key? key,
+    required this.offerID,
+  }) : super(key: key);
+  final int offerID;
   @override
-  State<AddOffer> createState() => _AddOfferState();
+  State<EditOffer> createState() => _AddOfferState();
 }
 
-class _AddOfferState extends State<AddOffer> {
+class _AddOfferState extends State<EditOffer> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController stateController = TextEditingController();
-  TextEditingController munucipalController = TextEditingController();
-  TextEditingController streetaddressController = TextEditingController();
+  TextEditingController titleController =
+      TextEditingController(text: "Your initial value");
+  TextEditingController descriptionController =
+      TextEditingController(text: "Your initial value");
+  TextEditingController priceController =
+      TextEditingController(text: "Your initial value");
+  TextEditingController stateController =
+      TextEditingController(text: "Your initial value");
+  TextEditingController munucipalController =
+      TextEditingController(text: "Your initial value");
+  TextEditingController streetaddressController =
+      TextEditingController(text: "Your initial value");
 
-  final ImagePicker imgpicker = ImagePicker();
-  List<XFile>? imagefiles;
-  openImages() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultiImage();
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
-        imagefiles = pickedfiles;
-        setState(() {});
-      } else {
-        print("No image is selected.");
-      }
-    } catch (e) {
-      print("error while picking file.");
-    }
-  }
-
-  uploadFile() async {}
-
-  late GetOffer offer;
-  getData(title, description, price, state, municpal, street_address) async {
-    offer = await AddOfferService().add_offer(
-        title, description, int.parse(price), state, municpal, street_address);
-    for (var i = 0; i < imagefiles!.length; i++) {
-      var postUri = Uri.parse(BaseAPI.api + "/add_image/");
-
-      http.MultipartRequest request = http.MultipartRequest("POST", postUri);
-
-      http.MultipartFile multipartFile =
-          await http.MultipartFile.fromPath('image', imagefiles![i].path);
-
-      request.files.add(multipartFile);
-      request.fields['offer'] = offer.id.toString();
-
-      http.StreamedResponse response = await request.send();
-    }
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Add Offer"),
+          title: Text("Edit Offer"),
         ),
         body: SafeArea(
           child: Form(
@@ -100,44 +76,6 @@ class _AddOfferState extends State<AddOffer> {
                       }
                       return null;
                     },
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(38, 10, 38, 10),
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          openImages();
-                        },
-                        child: Text("Select Images"),
-                        style: ElevatedButton.styleFrom(
-                          primary: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // <-- Radius
-                          ),
-                          elevation: 0,
-                        ),
-                      ),
-                      Divider(),
-                      Text("Picked Images:"),
-                      Divider(),
-                      imagefiles != null
-                          ? Wrap(
-                              children: imagefiles!.map((imageone) {
-                                return Container(
-                                    child: Card(
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: Image.file(File(imageone.path)),
-                                  ),
-                                ));
-                              }).toList(),
-                            )
-                          : Container()
-                    ],
                   ),
                 ),
                 Container(
@@ -311,17 +249,18 @@ class _AddOfferState extends State<AddOffer> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
+                        /*
                         getData(
                             titleController.text,
                             descriptionController.text,
                             priceController.text,
                             stateController.text,
                             munucipalController.text,
-                            streetaddressController.text);
+                            streetaddressController.text);*/
                       }
                     },
                     child: const Text(
-                      'Add Offer',
+                      'Update Offer',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

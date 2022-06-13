@@ -81,13 +81,11 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(
       title: 'Dzest',
     ),
-    Favourites(),
-    //ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
+      /*drawer: Drawer(
         child: ListView(
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
@@ -116,21 +114,22 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-      ),
+      ),*/
       appBar: AppBar(
         //title: Text(widget.title),
         //leading: null, // 1
-        title: Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
+        title:
+            Image.asset("assets/images/horizontal-logo.png", width: 110), // 2
         centerTitle: true,
         actions: [
-          !_seen
+          _seen
               ? Container(
                   margin: const EdgeInsets.all(10),
                   child: ElevatedButton(
                       onPressed: () {
                         AuthService().logout();
                         deleteToken();
-                        Navigator.pushNamed(context, '/welcome');
+                        Navigator.pushReplacementNamed(context, '/welcome');
                       },
                       style: ElevatedButton.styleFrom(
                         primary: AppColors.primaryColor,
@@ -161,17 +160,9 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: ConvexAppBar(
         style: TabStyle.react,
         backgroundColor: AppColors.primaryColor,
-        items: isAgency
-            ? [
-                TabItem(icon: Icons.home, title: 'Home'),
-                TabItem(icon: Icons.list, title: 'My Offers'),
-                TabItem(icon: Icons.person, title: 'Profile'),
-              ]
-            : [
-                TabItem(icon: Icons.home, title: 'Home'),
-                TabItem(icon: Icons.favorite, title: 'Favourites'),
-                TabItem(icon: Icons.person, title: 'Profile'),
-              ],
+        items: [
+          TabItem(icon: Icons.home, title: 'Home'),
+        ],
         //initialActiveIndex: 0, //optional, default as 0
         onTap: (int i) {
           setState(() {
@@ -180,6 +171,18 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
+      floatingActionButton: isAgency
+          ? FloatingActionButton(
+              backgroundColor: AppColors.primaryColor,
+              child: const Icon(
+                Icons.add,
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/addoffer');
+              },
+            )
+          : null,
     );
   }
 }

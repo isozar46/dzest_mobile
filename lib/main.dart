@@ -1,10 +1,13 @@
 import 'package:dzest_mobile/src/constants/app_colors.dart';
 import 'package:dzest_mobile/src/views/agency/add_offer.dart';
+import 'package:dzest_mobile/src/views/agency/edit_offer.dart';
+import 'package:dzest_mobile/src/views/agency_main_screen.dart';
 import 'package:dzest_mobile/src/views/agency_profile.dart';
 import 'package:dzest_mobile/src/views/auth/agency_signup.dart';
 import 'package:dzest_mobile/src/views/auth/client_signup.dart';
 import 'package:dzest_mobile/src/views/auth/login_page.dart';
 import 'package:dzest_mobile/src/views/client/favourites.dart';
+import 'package:dzest_mobile/src/views/client_main_screen.dart';
 import 'package:dzest_mobile/src/views/register.dart';
 import 'package:dzest_mobile/src/views/settings.dart';
 import 'package:dzest_mobile/src/views/welcome.dart';
@@ -45,6 +48,8 @@ class App extends StatelessWidget {
         '/agencysignup': (context) => AgencySignUp(),
         '/favourites': (context) => Favourites(),
         '/welcome': (context) => WelcomeScreen(),
+        '/agencyscreen': (context) => AgencyMainScreen(),
+        '/clientscreen': (context) => ClientMainScreen(),
       },
     );
   }
